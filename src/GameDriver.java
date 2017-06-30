@@ -33,12 +33,14 @@ public class GameDriver extends Application {
 	private Stage primaryStage;
 	
 	private Button bt;
+	OptionWindow popup;
 	
 	private Parent createRoot(){
 		return root = new AnchorPane();
 	}
 	private Parent createContent(Stage primaryStage, Scene scene) {
 		//root = new AnchorPane();
+		popup = new OptionWindow(primaryStage, scene, 0, 0);
 		boardwidth = (COLUMNS * (CARDWIDTH + CARDSPACE)) + CARDSPACE;
 		boardheight = 2*(ROWS * (CARDHEIGHT + CARDSPACE)) + SIDESPACE;
 		root.setPrefSize(boardwidth, boardheight);
@@ -57,7 +59,8 @@ public class GameDriver extends Application {
 		bt.setOnMouseClicked(e -> {
 			double x = e.getScreenX();
 			double y = e.getScreenY();
-			OptionWindow wd = new OptionWindow(primaryStage, scene, x, y);
+			//popup = new OptionWindow(primaryStage, scene, x, y);
+			popup.onEvent(x, y);
 			
 		});
 		return root;

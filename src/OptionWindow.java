@@ -12,14 +12,17 @@ import javafx.stage.Window;
 
 public class OptionWindow extends Popup{
 	Scene scene;
+	Stage stage;
 	Rectangle window;
 	VBox box;
 	Button[] commands;
 	
 	OptionWindow(Stage stage, Scene scene, double x, double y){
+		this.scene = scene;
+		this.stage = stage;
 		genScene();
 		//show(stage, x, y);
-		show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
+		//show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
 	}
 	
 //	private void genScene(){
@@ -37,6 +40,13 @@ public class OptionWindow extends Popup{
 		Button d = new Button("Send to Grave");
 		box.getChildren().addAll(b,c,d);
 		this.getContent().addAll(box);
+	}
+	
+	public void onEvent(double x, double y) {
+		if(this.isShowing()) {
+			this.hide();
+		}
+		show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
 	}
 	
 	private void onMonsterStage(){
