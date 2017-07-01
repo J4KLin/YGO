@@ -3,17 +3,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public class Card extends ImageView{
+	enum Position {SET, ATK, DEF, NONE};
 	
 	String name;
 	Image cardface;
 	Image cardback;
 	board gameboard;
+	OptionWindow options;
 	int xpos;
 	int ypos;
+	Position position;
 	
-	
-	public Card(board gameboard, String url) {
+	public Card(board gameboard, String url, OptionWindow options) {
 		this.gameboard = gameboard;
+		this.options = options;
 		Image cardface = new Image(url);
 		Image cardback = new Image("/assets/back.png");
 		setImage(cardface);
@@ -23,7 +26,7 @@ public class Card extends ImageView{
 		
 		setOnMouseClicked(e -> {
 			System.out.println("this card is: " + name);
-			//OptionWindow wd = new OptionWindow();
+			options.onEvent(e.getScreenX(), e.getScreenY());
 		});
 	}
 	

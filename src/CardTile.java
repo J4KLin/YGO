@@ -3,7 +3,7 @@ import javafx.scene.shape.Rectangle;
 
 public class CardTile extends Rectangle{
 	
-	enum tileType {DECK, FIELDSP, MONSTER, SP_TR, GRAVE, EXTRA};
+	enum tileType {DECK, FIELDSP, MONSTER, SP_TR, GRAVE, EXTRA, HAND};
 	
 	public tileType tile;
 	private Card card;

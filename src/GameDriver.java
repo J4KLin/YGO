@@ -50,7 +50,7 @@ public class GameDriver extends Application {
 		oppside = new board(1);
 		boardGroup.getChildren().add(playerside);
 		boardGroup.getChildren().add(oppside);
-		deck1 = new DeckBuilder(playerside, "s");
+		deck1 = new DeckBuilder(playerside, "s", popup);
 		root.getChildren().addAll(deck1);
 		
 		
@@ -70,7 +70,7 @@ public class GameDriver extends Application {
 		//ImageView imageview = new ImageView(new Image("file:///C:/Users/jack/eclipse-workspace/2DRPG/src/sky.jpg"));
 //		String url = this.getClass().getResource("/assets/sky.jpg").toString();
 //		ImageView imageview = new ImageView(new Image(url));
-		ImageView imageview = new ImageView(new Image("/assets/rembkg.jpg"));
+		ImageView imageview = new ImageView(new Image("/assets/sky.jpg"));
 		imageview.setFitWidth(boardwidth);
 		imageview.setFitHeight(boardheight);
 		root.getChildren().add(imageview);
