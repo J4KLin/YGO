@@ -60,7 +60,7 @@ public class GameDriver extends Application {
 			double x = e.getScreenX();
 			double y = e.getScreenY();
 			//popup = new OptionWindow(primaryStage, scene, x, y);
-			popup.onEvent(x, y);
+			//popup.onEvent(x, y);
 			
 		});
 		return root;

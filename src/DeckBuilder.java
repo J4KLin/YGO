@@ -13,7 +13,8 @@ public class DeckBuilder extends StackPane{
 		this.options = options;
 		setPickOnBounds(false);
 		deck = new Card[2];
-		deck[0] = new Card(this.gameboard,"/assets/darkmagician.png", this.options);
+		//deck[0] = new Card(this.gameboard,"/assets/darkmagician.png", this.options);
+		deck[0] = new Monster(this.gameboard,"/assets/darkmagician.png", this.options);
 		deck[1] = new Card(this.gameboard, "/assets/blueeyeswhitedragon.jpg", this.options);
 		deck[0].toGrave();
 		deck[1].toDeck();

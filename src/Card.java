@@ -26,7 +26,7 @@ public class Card extends ImageView{
 		
 		setOnMouseClicked(e -> {
 			System.out.println("this card is: " + name);
-			options.onEvent(e.getScreenX(), e.getScreenY());
+			options.onEvent(this, e.getScreenX(), e.getScreenY());
 		});
 	}
 	

@@ -12,11 +12,13 @@ public class board extends StackPane {
 	private int x;
 	private int y;
 	private int nodecounter;
+	public Phase phase;
 	
 	public board(int player){
 		nodecounter = 0;
 		this.player = player;
 		generateField();
+		phase = new Phase(player);
 	}
 	
 	private void generateField(){

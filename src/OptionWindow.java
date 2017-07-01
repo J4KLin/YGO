@@ -43,6 +43,13 @@ public class OptionWindow extends Popup{
 		initButton("Exit").setOnAction(e-> {this.hide();});
 		//this.getContent().add(commands.get("Exit"));
 		initButton("Attack");
+		initButton("Summon");
+		initButton("Set");
+		initButton("Tribute Summon");
+		initButton("Change to Defense");
+		initButton("Change to Attack");
+		initButton("Draw");
+		initButton("Activate");
 	}
 	
 	private Button initButton(String button){
@@ -84,10 +91,26 @@ public class OptionWindow extends Popup{
 //		this.getContent().addAll(box);
 //	}
 	
-	public void onEvent(double x, double y) {
+	public void onEvent(Card card, double x, double y) {
 		if(this.isShowing()) {
 			this.hide();
 		}
 		show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
+	}
+	
+	private void configureChoices(Card card) {
+		if (card instanceof Monster) {
+			handleMonster(card);
+		}
+		else {
+			handleSPTR(card);
+		}
+	}
+	
+	private void handleMonster(Card card) {
+	}
+	
+	private void handleSPTR(Card card) {
+		
 	}
 }
