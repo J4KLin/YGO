@@ -18,6 +18,7 @@ public class OptionWindow extends Popup{
 	Pane window;
 	VBox box;
 	double windowheight;
+	Card curCard;
 	//Button[] commands;
 	HashMap<String, Button> commands = new HashMap();
 	
@@ -43,7 +44,10 @@ public class OptionWindow extends Popup{
 		initButton("Exit").setOnAction(e-> {this.hide();});
 		//this.getContent().add(commands.get("Exit"));
 		initButton("Attack");
-		initButton("Summon");
+		initButton("Summon").setOnAction(e-> {
+			curCard.cardMovement(CardTile.tileType.MONSTER, false);
+			this.hide();
+		});
 		initButton("Set");
 		initButton("Tribute Summon");
 		initButton("Change to Defense");
@@ -73,6 +77,7 @@ public class OptionWindow extends Popup{
 		window.setPrefSize(100, 200);
 		addButton(commands.get("Exit"));
 		addButton(commands.get("Attack"));
+		addButton(commands.get("Summon"));
 		//window.getChildren().add(commands.get("Exit"));
 		//commands.get("Attack").setTranslateY(100);
 		//window.getChildren().add(commands.get("Attack"));
@@ -92,6 +97,7 @@ public class OptionWindow extends Popup{
 //	}
 	
 	public void onEvent(Card card, double x, double y) {
+		curCard = card;
 		if(this.isShowing()) {
 			this.hide();
 		}

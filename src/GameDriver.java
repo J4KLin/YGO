@@ -24,12 +24,13 @@ public class GameDriver extends Application {
 	//private Group tileGroup = new Group();
 	private AnchorPane root;
 	private DeckBuilder deck1;
+	private DeckBuilder deck2;
 	private board playerside;
 	private board oppside;
 	private Group boardGroup = new Group();
 	
-	private int boardwidth;
-	private int boardheight;
+	public int boardwidth;
+	public int boardheight;
 	private Stage primaryStage;
 	
 	private Button bt;
@@ -52,17 +53,19 @@ public class GameDriver extends Application {
 		boardGroup.getChildren().add(oppside);
 		deck1 = new DeckBuilder(playerside, "s", popup);
 		root.getChildren().addAll(deck1);
+		deck2 = new DeckBuilder(oppside, "s", popup);
+		root.getChildren().addAll(deck2);
 		
 		
-		bt = new Button("here");
-		root.getChildren().add(bt);
-		bt.setOnMouseClicked(e -> {
-			double x = e.getScreenX();
-			double y = e.getScreenY();
+//		bt = new Button("here");
+//		root.getChildren().add(bt);
+//		bt.setOnMouseClicked(e -> {
+//			double x = e.getScreenX();
+//			double y = e.getScreenY();
 			//popup = new OptionWindow(primaryStage, scene, x, y);
 			//popup.onEvent(x, y);
 			
-		});
+//		});
 		return root;
 	}
 	
@@ -70,7 +73,7 @@ public class GameDriver extends Application {
 		//ImageView imageview = new ImageView(new Image("file:///C:/Users/jack/eclipse-workspace/2DRPG/src/sky.jpg"));
 //		String url = this.getClass().getResource("/assets/sky.jpg").toString();
 //		ImageView imageview = new ImageView(new Image(url));
-		ImageView imageview = new ImageView(new Image("/assets/sky.jpg"));
+		ImageView imageview = new ImageView(new Image("/assets/rembkg.jpg"));
 		imageview.setFitWidth(boardwidth);
 		imageview.setFitHeight(boardheight);
 		root.getChildren().add(imageview);

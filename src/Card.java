@@ -10,9 +10,11 @@ public class Card extends ImageView{
 	Image cardback;
 	board gameboard;
 	OptionWindow options;
-	int xpos;
-	int ypos;
+	double xpos;
+	double ypos;
 	Position position;
+	CardTile.tileType placement;
+	CardTile tile;
 	
 	public Card(board gameboard, String url, OptionWindow options) {
 		this.gameboard = gameboard;
@@ -25,7 +27,7 @@ public class Card extends ImageView{
 		setCache(true);
 		
 		setOnMouseClicked(e -> {
-			System.out.println("this card is: " + name);
+			System.out.println("this card is in: " + placement.name());
 			options.onEvent(this, e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -35,64 +37,79 @@ public class Card extends ImageView{
 		setTranslateY(y);
 	}
 	
-	public void toDeck() {
-		xpos = gameboard.deck.xpos;
-		ypos = gameboard.deck.ypos;
-		gameboard.deck.placeCard(this);
+	public void toDeck(boolean init) {
+		tile = gameboard.cardMovement(this, CardTile.tileType.DECK, init);
+		placement = CardTile.tileType.DECK;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		//gameboard.deck.placeCard(this);
 		setTranslateX(xpos);
 		setTranslateY(ypos);
 	}
 	
-	public void toExtra() {
-		xpos = gameboard.extra.xpos;
-		ypos = gameboard.extra.ypos;
-		gameboard.extra.placeCard(this);
+	public void toExtra(boolean init) {
+		tile = gameboard.cardMovement(this, CardTile.tileType.EXTRA, init);
+		placement = CardTile.tileType.EXTRA;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		//gameboard.extra.placeCard(this);
 		setTranslateX(xpos);
 		setTranslateY(ypos);
 	}
 	
-	public void toGrave() {
-		xpos = gameboard.grave.xpos;
-		ypos = gameboard.grave.ypos;
-		gameboard.grave.placeCard(this);
+	public void toGrave(boolean init) {
+		tile = gameboard.cardMovement(this, CardTile.tileType.GRAVE, init);
+		placement = CardTile.tileType.GRAVE;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		//gameboard.extra.placeCard(this);
 		setTranslateX(xpos);
 		setTranslateY(ypos);
 	}
 	
-	public void toMonsterZone() {
-		CardTile[] field = gameboard.monsterField;
-		CardTile curtile = null;
-		for(int tile=0; tile < field.length; tile++) {
-			curtile = field[tile];
-			if(!curtile.hasCard()) {
-				curtile.placeCard(this);
-				break;
-			}
-		}
-		if(curtile != null) {
-			xpos = curtile.xpos;
-			ypos = curtile.ypos;
-			setTranslateX(xpos);
-			setTranslateY(ypos);
-		}
+	public void toMonsterZone(boolean init){
+		tile = gameboard.cardMovement(this, CardTile.tileType.MONSTER, init);
+		placement = CardTile.tileType.MONSTER;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		//gameboard.deck.placeCard(this);
+		setTranslateX(xpos);
+		setTranslateY(ypos);
 	}
 	
-	public void toSTZone() {
-		CardTile[] field = gameboard.stField;
-		CardTile curtile = null;
-		for(int tile=0; tile < field.length; tile++) {
-			curtile = field[tile];
-			if(!curtile.hasCard()) {
-				curtile.placeCard(this);
-				break;
-			}
-		}
-		if(curtile != null) {
-			xpos = curtile.xpos;
-			ypos = curtile.ypos;
-			setTranslateX(xpos);
-			setTranslateY(ypos);
-		}
+	public void toSTZone(boolean init){
+		tile = gameboard.cardMovement(this, CardTile.tileType.SP_TR, init);
+		placement = CardTile.tileType.SP_TR;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		//gameboard.deck.placeCard(this);
+		setTranslateX(xpos);
+		setTranslateY(ypos);
 	}
 	
+	public void toHand(boolean init){
+		tile = gameboard.cardMovement(this, CardTile.tileType.HAND, init);
+		placement = CardTile.tileType.HAND;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		setTranslateX(xpos);
+		setTranslateY(ypos);
+	}
+	
+	public void updateLocation(CardTile t){
+		setTranslateX(t.xpos);
+		setTranslateY(t.ypos);
+	}
+	
+	public void cardMovement(CardTile.tileType to, boolean init){
+		if(gameboard.isFull(to)){
+			return;
+		}
+		tile = gameboard.cardMovement(this, to, init);
+		placement = to;
+		xpos = tile.xpos;
+		ypos = tile.ypos;
+		setTranslateX(xpos);
+		setTranslateY(ypos);
+	}
 }
