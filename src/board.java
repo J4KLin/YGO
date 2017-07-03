@@ -16,8 +16,8 @@ public class board extends StackPane {
 	private int sptrcount;
 	//private int handcount;
 	
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	public Phase phase;
 	
 	public board(int player){
@@ -239,7 +239,7 @@ public class board extends StackPane {
 	}
 	
 	private void updateHand(){
-		int ypos;
+		double ypos;
 		if(player == 0){
 			ypos = GameDriver.SIDESPACE + (GameDriver.CARDHEIGHT * ((2 * GameDriver.ROWS)-1)) + (GameDriver.CARDSPACE * 5);
 		}

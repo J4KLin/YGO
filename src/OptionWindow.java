@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class OptionWindow extends Popup{
+	private static final String[] labels = {"Summon", "Set", "Tribute Summon", "Special Summon", "Activate",
+			"Flip", "Change to Attack", "Change to Defense", "Attack", "View Card", "Exit", "Draw", "View Deck",
+			"View Grave", "View Extra Deck"};
 	Scene scene;
 	Stage stage;
 	Pane window;
@@ -32,14 +35,6 @@ public class OptionWindow extends Popup{
 		//show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
 	}
 	
-//	private void genScene(){
-//		window = new Rectangle();
-//		window.setWidth(100);
-//		window.setHeight(100);
-//		window.setStroke(Color.valueOf("#000000"));
-//		window.setFill(Color.BLACK);
-//		this.getContent().addAll(window);
-//	}
 	private void initAllButton(){
 		initButton("Exit").setOnAction(e-> {this.hide();});
 		//this.getContent().add(commands.get("Exit"));
@@ -52,8 +47,17 @@ public class OptionWindow extends Popup{
 		initButton("Tribute Summon");
 		initButton("Change to Defense");
 		initButton("Change to Attack");
-		initButton("Draw");
+		initButton("Draw").setOnAction(e-> {
+			curCard.cardMovement(CardTile.tileType.HAND, false);
+			this.hide();
+		});;
 		initButton("Activate");
+		initButton("Special Summon");
+		initButton("Flip");
+		initButton("View Card");
+		initButton("View Grave");
+		initButton("View Extra Deck");
+		initButton("View Deck");
 	}
 	
 	private Button initButton(String button){
@@ -72,51 +76,102 @@ public class OptionWindow extends Popup{
 		windowheight = windowheight + button.getPrefHeight();
 	}
 	
+	private void removeAllButtons() {
+		window.getChildren().clear();
+		windowheight = 0;
+	}
+	
 	private void genScene(){
 		window = new Pane();
 		window.setPrefSize(100, 200);
-		addButton(commands.get("Exit"));
-		addButton(commands.get("Attack"));
-		addButton(commands.get("Summon"));
+//		addButton(commands.get("Exit"));
+//		addButton(commands.get("Attack"));
+//		addButton(commands.get("Summon"));
 		//window.getChildren().add(commands.get("Exit"));
 		//commands.get("Attack").setTranslateY(100);
 		//window.getChildren().add(commands.get("Attack"));
 		this.getContent().addAll(window);
 	}
-//	private void genScene(){
-//		box = new VBox();
-//		Button b = new Button("Summon");
-//		Button c = new Button("Set");
-//		Button d = new Button("Send to Grave");
-//		Button f = new Button("Exit");
-//		f.setOnAction(e ->{
-//			this.hide();
-//		});
-//		box.getChildren().addAll(b,c,d,f);
-//		this.getContent().addAll(box);
-//	}
 	
 	public void onEvent(Card card, double x, double y) {
 		curCard = card;
+		updateOptions(card, card.placement);
 		if(this.isShowing()) {
 			this.hide();
 		}
 		show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
 	}
 	
-	private void configureChoices(Card card) {
+	private void updateOptions(Card card, CardTile.tileType type) {
+		removeAllButtons();
+		switch (type) {
+			case DECK:
+				handleDeck(card);
+				break;
+			case GRAVE:
+				handleGrave(card);
+				break;
+			case EXTRA:
+				handleExtra(card);
+				break;
+			case FIELDSP:
+				handleFieldSP(card);
+				break;
+			case MONSTER:
+				handleMonsterF(card);
+				break;
+			case SP_TR:
+				handleSPTRF(card);
+				break;
+			default:
+				handleHand(card);
+				break;
+		}
+		addButton(commands.get("Exit"));
+	}
+	
+	private void handleDeck(Card card) {
+		addButton(commands.get("Draw"));
+		addButton(commands.get("View Deck"));
+	}
+	
+	private void handleGrave(Card card) {
+		addButton(commands.get("View Grave"));
+	}
+	
+	private void handleExtra(Card card) {
+		addButton(commands.get("View Extra Deck"));
+	}
+	
+	private void handleFieldSP(Card card) {
+		addButton(commands.get("View Card"));
+	}
+	
+	private void handleMonsterF(Card card) {
+		addButton(commands.get("View Card"));
+		addButton(commands.get("Activate"));
+		addButton(commands.get("Flip"));
+		addButton(commands.get("Attack"));
+		addButton(commands.get("Change to Attack"));
+		addButton(commands.get("Change to Defense"));
+	}
+	
+	private void handleSPTRF(Card card) {
+		addButton(commands.get("View Card"));
+		addButton(commands.get("Activate"));
+	}
+	
+	private void handleHand(Card card) {
+		addButton(commands.get("View Card"));
 		if (card instanceof Monster) {
-			handleMonster(card);
+			addButton(commands.get("Summon"));
+			addButton(commands.get("Tribute Summon"));
+			addButton(commands.get("Set"));
+			addButton(commands.get("Activate"));
 		}
 		else {
-			handleSPTR(card);
+			addButton(commands.get("Set"));
+			addButton(commands.get("Activate"));
 		}
-	}
-	
-	private void handleMonster(Card card) {
-	}
-	
-	private void handleSPTR(Card card) {
-		
 	}
 }

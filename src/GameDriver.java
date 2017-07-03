@@ -14,12 +14,12 @@ import javafx.stage.Window;
 
 
 public class GameDriver extends Application {
-	public static final int CARDWIDTH = 100;
-	public static final int CARDHEIGHT = (int)(CARDWIDTH * 1.5);
-	public static final int CARDSPACE = 5;
-	public static final int SIDESPACE = 20;
-	public static final int ROWS = 3;
-	public static final int COLUMNS = 7;
+	public static final double CARDWIDTH = 100;
+	public static final double CARDHEIGHT = (int)(CARDWIDTH * 1.5);
+	public static final double CARDSPACE = 5;
+	public static final double SIDESPACE = 50;
+	public static final double ROWS = 3;
+	public static final double COLUMNS = 7;
 	
 	//private Group tileGroup = new Group();
 	private AnchorPane root;
@@ -29,8 +29,8 @@ public class GameDriver extends Application {
 	private board oppside;
 	private Group boardGroup = new Group();
 	
-	public int boardwidth;
-	public int boardheight;
+	public double boardwidth;
+	public double boardheight;
 	private Stage primaryStage;
 	
 	private Button bt;
@@ -73,7 +73,7 @@ public class GameDriver extends Application {
 		//ImageView imageview = new ImageView(new Image("file:///C:/Users/jack/eclipse-workspace/2DRPG/src/sky.jpg"));
 //		String url = this.getClass().getResource("/assets/sky.jpg").toString();
 //		ImageView imageview = new ImageView(new Image(url));
-		ImageView imageview = new ImageView(new Image("/assets/rembkg.jpg"));
+		ImageView imageview = new ImageView(new Image("/assets/sky.jpg"));
 		imageview.setFitWidth(boardwidth);
 		imageview.setFitHeight(boardheight);
 		root.getChildren().add(imageview);

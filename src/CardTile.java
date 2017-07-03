@@ -9,15 +9,11 @@ public class CardTile extends Rectangle{
 	
 	public static final int MAXCAPACITY = 80;
 	public tileType tile;
-	//private Card card;
 	private ArrayList<Card> cards;
 	int capacity;
 	public double xpos;
 	public double ypos;
 	
-//	public boolean hasCard() {
-//		return card != null;
-//	}
 	
 	public boolean isFull() {
 		return cards.size() >= capacity;
@@ -29,16 +25,10 @@ public class CardTile extends Rectangle{
 	
 	public void placeCard(Card card) {
 		cards.add(card);
-		//this.card = card;
 	}
-	
-//	public Card getCard() {
-//		return card;
-//	}
-	
+
 	public void removeCard(Card card){
 		cards.remove(card);
-		//this.card = null;
 	}
 	
 	public Card getTopCard(){
@@ -55,12 +45,17 @@ public class CardTile extends Rectangle{
 		setTranslateY(y);
 	}
 	
-	public CardTile(tileType ttype, int x, int y) {
+	public CardTile(tileType ttype, double x, double y) {
 		tile = ttype;
 		initTileCapacity();
 		cards = new ArrayList();
 		setWidth(GameDriver.CARDWIDTH);
 		setHeight(GameDriver.CARDHEIGHT);
+		///////////////
+//		if(ttype == tileType.MONSTER || ttype == tileType.SP_TR) {
+//			setWidth(GameDriver.CARDHEIGHT);
+//		}
+		//////////////
 		xpos = x;
 		ypos = y;
 		
