@@ -43,18 +43,37 @@ public class OptionWindow extends Popup{
 			curCard.cardMovement(CardTile.tileType.MONSTER, false);
 			this.hide();
 		});
-		initButton("Set");
+		initButton("Set").setOnAction(e-> {
+			curCard.setCard();
+			this.hide();
+		});;
 		initButton("Tribute Summon");
-		initButton("Change to Defense");
-		initButton("Change to Attack");
+		initButton("Change to Defense").setOnAction(e-> {
+			((Monster) curCard).changetodefense();
+			this.hide();
+		});;
+		initButton("Change to Attack").setOnAction(e-> {
+			((Monster) curCard).changetoattack();
+			this.hide();
+		});;
 		initButton("Draw").setOnAction(e-> {
 			curCard.cardMovement(CardTile.tileType.HAND, false);
 			this.hide();
 		});;
-		initButton("Activate");
+		initButton("Activate").setOnAction(e-> {
+			curCard.activate();
+			this.hide();
+		});;
 		initButton("Special Summon");
-		initButton("Flip");
-		initButton("View Card");
+		initButton("Flip").setOnAction(e-> {
+			((Monster) curCard).flipCard();
+			this.hide();
+		});;
+		initButton("View Card").setOnAction(e-> {
+			System.out.println("Viewing");
+			curCard.gameboard.viewCard(curCard);
+			this.hide();
+		});
 		initButton("View Grave");
 		initButton("View Extra Deck");
 		initButton("View Deck");

@@ -13,12 +13,16 @@ public class CardTile extends Rectangle{
 	int capacity;
 	public double xpos;
 	public double ypos;
+	public OptionWindow option;
 	
 	
 	public boolean isFull() {
 		return cards.size() >= capacity;
 	}
 	
+	public boolean hasCard(){
+		return cards.size() > 0;
+	}
 	public boolean canPlace() {
 		return cards.size() < capacity;
 	}
@@ -45,27 +49,47 @@ public class CardTile extends Rectangle{
 		setTranslateY(y);
 	}
 	
-	public CardTile(tileType ttype, double x, double y) {
+	public CardTile(tileType ttype, OptionWindow option, double x, double y) {
+		this.option = option;
 		tile = ttype;
 		initTileCapacity();
 		cards = new ArrayList();
-		setWidth(GameDriver.CARDWIDTH);
 		setHeight(GameDriver.CARDHEIGHT);
-		///////////////
-//		if(ttype == tileType.MONSTER || ttype == tileType.SP_TR) {
-//			setWidth(GameDriver.CARDHEIGHT);
-//		}
-		//////////////
+		if(ttype == tileType.MONSTER|| ttype == tileType.SP_TR) {
+			this.setWidth(GameDriver.CARDHEIGHT);
+		}
+		else{
+			setWidth(GameDriver.CARDWIDTH);
+		}
 		xpos = x;
 		ypos = y;
-		
+	
 		setTranslateX(x);
 		setTranslateY(y);
-		setStroke(Color.valueOf("#000000"));
+		setStroke(Color.valueOf("#2297DC"));
 		setFill(Color.TRANSPARENT);
+		setStrokeWidth(5);
+		if(ttype == tileType.HAND){
+			setStrokeWidth(8);
+		}
 		
 		setOnMouseClicked(e-> {
 			System.out.println("This is: " + tile.name());
+			if(hasCard()){
+				option.onEvent(getTopCard(), e.getScreenX(), e.getScreenY());
+			}
+		});
+		
+		setOnMouseEntered(e-> {
+			setStroke(Color.DARKORANGE);
+			if(hasCard()){
+				Card c = getTopCard();
+				//c.gameboard.viewCard(c);
+			}
+		});
+		
+		setOnMouseExited(e-> {
+			setStroke(Color.valueOf("#2297DC"));
 		});
 	}
 	

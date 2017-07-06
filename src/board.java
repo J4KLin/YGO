@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 
+import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class board extends StackPane {
 	public int player;
@@ -11,31 +15,33 @@ public class board extends StackPane {
 	public CardTile[] stField;
 	public CardTile extra;
 	public ArrayList<CardTile> hand;
-	//private int handcount;
-	private int monstercount;
-	private int sptrcount;
-	//private int handcount;
+	
+	public Group group;
 	
 	private double x;
 	private double y;
 	public Phase phase;
+	public OptionWindow option;
 	
-	public board(int player){
-		monstercount = 0;
-		sptrcount = 0;
-		//handcount = 0;
+	public Rectangle cvBorder;
+	public ImageView cardView;
+	
+	public board(int player , OptionWindow option, Group group){
+		this.option = option;
+		this.group = group;
 		this.player = player;
 		generateField();
 		phase = new Phase(player);
 	}
-	
+
 	private void generateField(){
+		genCardViewer();
+		genstField();
+		genMonsterField();
 		genGrave();
 		genFieldsp();
 		genExtra();
 		genDeck();
-		genstField();
-		genMonsterField();
 		genHand();
 	}
 	
@@ -67,94 +73,117 @@ public class board extends StackPane {
 			return false;
 		}
 	}
+	
+	private void genCardViewer(){
+		cvBorder = new Rectangle(GameDriver.DESWIDTH, GameDriver.DESHEIGHT, Color.TRANSPARENT);
+		cvBorder.setStroke(Color.valueOf("#2297DC"));
+		cvBorder.setStrokeWidth(5);
+		cvBorder.setTranslateX(GameDriver.CARDSPACE);
+		cvBorder.setTranslateY(GameDriver.CARDSPACE);
+		group.getChildren().add(cvBorder);
+		cardView = new ImageView();
+		cardView.setFitWidth(GameDriver.DESWIDTH);
+		cardView.setFitHeight(GameDriver.DESHEIGHT);
+		cardView.setTranslateX(GameDriver.CARDSPACE);
+		cardView.setTranslateY(GameDriver.CARDSPACE);
+		group.getChildren().add(cardView);
+	}
+	
+	public void viewCard(Card card){
+		cardView.setImage(card.cardface);
+	}
 	private void genGrave(){
 		if(player == 0){
-			x = (GameDriver.CARDWIDTH *6) + (GameDriver.CARDSPACE * 7);
+			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 3) + (GameDriver.CARDSPACE * 3) + GameDriver.SIDESPACE;
 		}
 		else{
-			x = (GameDriver.CARDSPACE);
+			x = (GameDriver.CARDSPACE*2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 2) + (GameDriver.CARDSPACE * 3);
 		}
-		grave = new CardTile(CardTile.tileType.GRAVE, x, y);
-		getChildren().add(grave);
+		grave = new CardTile(CardTile.tileType.GRAVE, option, x, y);
+		group.getChildren().add(grave);
 	}
 	
 	private void genExtra(){
 		if(player == 0){
-			x = (GameDriver.CARDSPACE);
+			x = (GameDriver.CARDSPACE * 2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 4) + (GameDriver.CARDSPACE * 4) + GameDriver.SIDESPACE;
 		}
 		else{
-			x = (GameDriver.CARDWIDTH *6) + (GameDriver.CARDSPACE * 7);
+			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 2) + (GameDriver.CARDHEIGHT);
 		}
-		extra = new CardTile(CardTile.tileType.EXTRA, x, y);
-		getChildren().add(extra);
+		extra = new CardTile(CardTile.tileType.EXTRA, option, x, y);
+		group.getChildren().add(extra);
 	}
 	
 	private void genDeck(){
 		if(player == 0){
-			x = (GameDriver.CARDWIDTH *6) + (GameDriver.CARDSPACE * 7);
+			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 4) + (GameDriver.CARDSPACE * 4) + GameDriver.SIDESPACE;
 		}
 		else{
-			x = (GameDriver.CARDSPACE);
+			x = (GameDriver.CARDSPACE*2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 2) + GameDriver.CARDHEIGHT;
 		}
-		deck = new CardTile(CardTile.tileType.DECK, x, y);
+		deck = new CardTile(CardTile.tileType.DECK, option, x, y);
 		getChildren().add(deck);
+		group.getChildren().add(deck);
 	}
 	
 	private void genFieldsp(){
 		if(player == 0){
-			x = (GameDriver.CARDSPACE);
+			x = (GameDriver.CARDSPACE * 2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 3) + (GameDriver.CARDSPACE * 3) + GameDriver.SIDESPACE;
 		}
 		else{
-			x = (GameDriver.CARDWIDTH *6) + (GameDriver.CARDSPACE * 7);
+			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 3) + (GameDriver.CARDHEIGHT * 2);
 		}
-		fieldsp = new CardTile(CardTile.tileType.FIELDSP, x, y);
+		fieldsp = new CardTile(CardTile.tileType.FIELDSP, option, x, y);
 		getChildren().add(fieldsp);
+		group.getChildren().add(fieldsp);
 	}
 	
 	private void genMonsterField(){
 		monsterField = new CardTile[5];
 		if(player == 0){
 			for(int col=0; col < 5; col ++){
-				x = (GameDriver.CARDSPACE * (col+2)) + (GameDriver.CARDWIDTH * (col+1));
+				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDHEIGHT * 3) + (GameDriver.CARDSPACE * 3) + GameDriver.SIDESPACE;
-				monsterField[col] = new CardTile(CardTile.tileType.MONSTER, x, y);
+				monsterField[col] = new CardTile(CardTile.tileType.MONSTER, option, x, y);
+				group.getChildren().add(monsterField[col]);
 			}
 		}
 		else{
 			for(int col=0; col <5; col ++){
-				x = (GameDriver.CARDSPACE * (col+2)) + (GameDriver.CARDWIDTH * (col+1));
+				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDSPACE * 3) + (GameDriver.CARDHEIGHT * 2);
-				monsterField[col] = new CardTile(CardTile.tileType.MONSTER, x, y);
+				monsterField[col] = new CardTile(CardTile.tileType.MONSTER, option, x, y);
+				group.getChildren().add(monsterField[col]);
 			}
 		}
-		getChildren().addAll(monsterField);
 	}
 	
 	private void genstField(){
 		stField = new CardTile[5];
 		if(player == 0){
 			for(int col=0; col < 5; col ++){
-				x = (GameDriver.CARDSPACE * (col+2)) + (GameDriver.CARDWIDTH * (col+1));
+				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDHEIGHT * 4) + (GameDriver.CARDSPACE * 4) + GameDriver.SIDESPACE;
-				stField[col] = new CardTile(CardTile.tileType.SP_TR, x, y);
+				stField[col] = new CardTile(CardTile.tileType.SP_TR, option, x, y);
+				group.getChildren().add(stField[col]);
 			}
 		}
 		else{
 			for(int col=0; col <5; col ++){
-				x = (GameDriver.CARDSPACE * (col+2)) + (GameDriver.CARDWIDTH * (col+1));
+				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDSPACE * 2) + (GameDriver.CARDHEIGHT * 1);
-				stField[col] = new CardTile(CardTile.tileType.SP_TR, x, y);
+				stField[col] = new CardTile(CardTile.tileType.SP_TR, option, x, y);
+				group.getChildren().add(stField[col]);
 			}
 		}
-		getChildren().addAll(stField);
 	}
 	
 	public CardTile cardMovement(Card card, CardTile.tileType to, boolean init){
@@ -213,28 +242,21 @@ public class board extends StackPane {
 	}
 	private void genHand(){
 		hand = new ArrayList<CardTile>();
-//		for(int tidx=0; tidx < CardTile.MAXCAPACITY; tidx++){
-//			hand[tidx] = new CardTile(CardTile.tileType.HAND, 100, 100);
-//		}
-		//getChildren().addAll(hand);
-		//handcount = 0;
 	}
 	
 	public CardTile addCardtoHand(Card card){
-		//handcount += 1;
-		CardTile newtile = new CardTile(CardTile.tileType.HAND, 0,0);
+		CardTile newtile = new CardTile(CardTile.tileType.HAND, option, 0,0);
 		hand.add(newtile);
-		getChildren().add(newtile);
+		group.getChildren().add(newtile);
 		newtile.placeCard(card);
 		updateHand();
 		return newtile;
 	}
 	
 	public void removeCardfromHand(Card card){
-		//handcount -= 1;
 		CardTile oldtile = card.tile;
 		hand.remove(oldtile);
-		getChildren().remove(oldtile);
+		group.getChildren().remove(oldtile);
 		updateHand();
 	}
 	
@@ -247,30 +269,29 @@ public class board extends StackPane {
 			ypos = GameDriver.CARDSPACE;
 		}
 		int handcount = hand.size();
-		double border = (GameDriver.COLUMNS * GameDriver.CARDWIDTH) + ((GameDriver.COLUMNS-1)* GameDriver.CARDSPACE);
+		double fitsize = (2 * GameDriver.CARDWIDTH) + (5 * GameDriver.CARDHEIGHT)+ ((GameDriver.COLUMNS-1)* GameDriver.CARDSPACE);
 		double spreadsize = handcount * GameDriver.CARDWIDTH;
 		double adjustfactor;
+		double desspace = GameDriver.DESWIDTH + GameDriver.CARDSPACE;
 		CardTile curtile;
-		if(border >= spreadsize){
-			adjustfactor = (border-spreadsize)/2 + GameDriver.CARDSPACE;
+		if(fitsize >= spreadsize){
+			adjustfactor = (fitsize-spreadsize)/2 + GameDriver.CARDSPACE;
 			for(int cidx=0; cidx < hand.size(); cidx++){
 				curtile = hand.get(cidx);
-				curtile.moveTile(adjustfactor, ypos);
+				curtile.moveTile(adjustfactor + desspace, ypos);
 				adjustfactor += GameDriver.CARDWIDTH;
 				curtile.getTopCard().updateLocation(curtile);
 			}
 		}
 		else{
-			adjustfactor = ((double)1/(handcount-1))*(border-GameDriver.CARDWIDTH);
+			adjustfactor = ((double)1/(handcount-1))*(fitsize-GameDriver.CARDWIDTH);
 			double relativepos = GameDriver.CARDSPACE;
 			for(int cidx=0; cidx < hand.size(); cidx++){
 				curtile = hand.get(cidx);
-				curtile.moveTile(relativepos, ypos);
+				curtile.moveTile(relativepos + desspace, ypos);
 				relativepos += adjustfactor;
 				curtile.getTopCard().updateLocation(curtile);
-			}
-			
-			
+			}	
 		}
 	}
 }

@@ -1,3 +1,4 @@
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -19,17 +20,27 @@ public class Card extends ImageView{
 	public Card(board gameboard, String url, OptionWindow options) {
 		this.gameboard = gameboard;
 		this.options = options;
-		Image cardface = new Image(url);
-		Image cardback = new Image("/assets/back.png");
+		cardface = new Image(url);
+		cardback = new Image("/assets/back.png");
 		setImage(cardface);
 		setFitWidth(GameDriver.CARDWIDTH);
 		setFitHeight(GameDriver.CARDHEIGHT);
-		setCache(true);
+		//setCache(true);
 		
-		setOnMouseClicked(e -> {
-			System.out.println("this card is in: " + placement.name());
-			options.onEvent(this, e.getScreenX(), e.getScreenY());
-		});
+		setMouseTransparent(true);
+//		setOnMouseClicked(e -> {
+//			System.out.println("this card is in: " + placement.name());
+//			options.onEvent(this, e.getScreenX(), e.getScreenY());
+//		});
+	}
+	
+	public void setCard(){
+		this.setImage(cardback);
+		System.out.println("setting");
+	}
+	
+	public void activate(){
+		this.setImage(cardface);
 	}
 	
 	public void deprecated_placement(int x, int y) {
@@ -38,62 +49,63 @@ public class Card extends ImageView{
 	}
 	
 	public void toDeck(boolean init) {
-		tile = gameboard.cardMovement(this, CardTile.tileType.DECK, init);
-		placement = CardTile.tileType.DECK;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		//gameboard.deck.placeCard(this);
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.DECK, init);
+//		placement = CardTile.tileType.DECK;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		//gameboard.deck.placeCard(this);
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void toExtra(boolean init) {
-		tile = gameboard.cardMovement(this, CardTile.tileType.EXTRA, init);
-		placement = CardTile.tileType.EXTRA;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		//gameboard.extra.placeCard(this);
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.EXTRA, init);
+//		placement = CardTile.tileType.EXTRA;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		//gameboard.extra.placeCard(this);
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void toGrave(boolean init) {
-		tile = gameboard.cardMovement(this, CardTile.tileType.GRAVE, init);
-		placement = CardTile.tileType.GRAVE;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		//gameboard.extra.placeCard(this);
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.GRAVE, init);
+		this.toFront();
+//		placement = CardTile.tileType.GRAVE;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		//gameboard.extra.placeCard(this);
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void toMonsterZone(boolean init){
-		tile = gameboard.cardMovement(this, CardTile.tileType.MONSTER, init);
-		placement = CardTile.tileType.MONSTER;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		//gameboard.deck.placeCard(this);
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.MONSTER, init);
+//		placement = CardTile.tileType.MONSTER;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		//gameboard.deck.placeCard(this);
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void toSTZone(boolean init){
-		tile = gameboard.cardMovement(this, CardTile.tileType.SP_TR, init);
-		placement = CardTile.tileType.SP_TR;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		//gameboard.deck.placeCard(this);
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.SP_TR, init);
+//		placement = CardTile.tileType.SP_TR;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		//gameboard.deck.placeCard(this);
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void toHand(boolean init){
-		tile = gameboard.cardMovement(this, CardTile.tileType.HAND, init);
-		placement = CardTile.tileType.HAND;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		setTranslateX(xpos);
-		setTranslateY(ypos);
+		cardMovement(CardTile.tileType.HAND, init);
+//		placement = CardTile.tileType.HAND;
+//		xpos = tile.xpos;
+//		ypos = tile.ypos;
+//		setTranslateX(xpos);
+//		setTranslateY(ypos);
 	}
 	
 	public void updateLocation(CardTile t){
@@ -109,6 +121,9 @@ public class Card extends ImageView{
 		placement = to;
 		xpos = tile.xpos;
 		ypos = tile.ypos;
+		if(to == CardTile.tileType.MONSTER || to == CardTile.tileType.SP_TR){
+			xpos += ((GameDriver.CARDHEIGHT-GameDriver.CARDWIDTH)/2);
+		}
 		setTranslateX(xpos);
 		setTranslateY(ypos);
 	}
