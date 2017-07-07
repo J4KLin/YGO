@@ -43,7 +43,7 @@ public class Card extends ImageView{
 		this.setImage(cardface);
 	}
 	
-	public void deprecated_placement(int x, int y) {
+	public void deprecated_placement(double x, double y) {
 		setTranslateX(x);
 		setTranslateY(y);
 	}

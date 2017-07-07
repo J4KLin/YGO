@@ -84,15 +84,32 @@ public class CardTile extends Rectangle{
 			setStroke(Color.DARKORANGE);
 			if(hasCard()){
 				Card c = getTopCard();
-				//c.gameboard.viewCard(c);
+				c.gameboard.viewCard(c);
+				this.toFront();
+				if(tile == tileType.HAND){
+					slideCardForward();
+				}
 			}
 		});
 		
 		setOnMouseExited(e-> {
 			setStroke(Color.valueOf("#2297DC"));
+			if(tile == tileType.HAND){
+				slideCardBack();
+			}
 		});
 	}
 	
+	private void slideCardForward(){
+		this.setTranslateY(ypos-30);
+		getTopCard().deprecated_placement(xpos, ypos-30);
+	}
+	private void slideCardBack(){
+		this.setTranslateY(ypos);
+		if(hasCard()){
+			getTopCard().deprecated_placement(xpos, ypos);
+		}
+	}
 	private void initTileCapacity(){
 		switch (tile){
 			case DECK:

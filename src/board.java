@@ -90,6 +90,7 @@ public class board extends StackPane {
 	}
 	
 	public void viewCard(Card card){
+		cardView.toFront();
 		cardView.setImage(card.cardface);
 	}
 	private void genGrave(){
