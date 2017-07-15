@@ -31,7 +31,9 @@ public class GameDriver extends Application {
 	public static final double INITWIDTH = ((COLUMNS+2)*CARDSPACE) + (2*CARDWIDTH) + (5*CARDHEIGHT) + DESWIDTH;
 	
 	//private Group tileGroup = new Group();
-	private AnchorPane root;
+	private Pane root;
+	private Pane basePane;
+	private CardWindow windowPane;
 	private DeckBuilder deck1;
 	private DeckBuilder deck2;
 	private board playerside;
@@ -47,39 +49,31 @@ public class GameDriver extends Application {
 	OptionWindow popup;
 	
 	private Parent createRoot(){
-		return root = new AnchorPane();
+		basePane = new Pane();
+		root = new Pane();
+		root.setPrefSize(INITWIDTH, INITHEIGHT);
+		addBackground();
+		root.getChildren().add(basePane);
+		windowPane = new CardWindow(root);
+		root.getChildren().add(windowPane);
+		return root;
+		
 	}
 	private Parent createContent(Stage primaryStage, Scene scene) {
-		//root = new AnchorPane();
 		popup = new OptionWindow(primaryStage, scene, 0, 0);
-		//boardwidth = (COLUMNS * (CARDWIDTH + CARDSPACE)) + CARDSPACE;
-		//boardheight = 2*(ROWS * (CARDHEIGHT + CARDSPACE)) + SIDESPACE;
 		boardwidth = INITWIDTH;
 		boardheight = INITHEIGHT;
-		root.setPrefSize(boardwidth, boardheight);
-		addBackground();
-		root.getChildren().addAll(boardGroup);
+		basePane.setPrefSize(boardwidth,  boardheight);
+		basePane.getChildren().addAll(boardGroup);
+		//
 		playerside = new board(0, popup,boardGroup);
 		oppside = new board(1, popup, boardGroup);
-		//boardGroup.getChildren().add(playerside);
-		//boardGroup.getChildren().add(oppside);
-		root.getChildren().addAll(cardGroup);
-		deck1 = new DeckBuilder(playerside, "s", popup, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/yugi"));
-		//root.getChildren().addAll(deck1);
-		deck2 = new DeckBuilder(oppside, "s", popup, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/kaiba"));
-		//root.getChildren().addAll(deck2);
-		
-		
-//		ImageView img = new ImageView();
-//		img.setImage(new Image("/assets/back.png"));
-//		img.setFitWidth(GameDriver.CARDWIDTH);
-//		img.setFitHeight(GameDriver.CARDHEIGHT);
-//		root.getChildren().add(img);
-		
-//		playerside.setTranslateX(playerside.getUpperX());
-//		playerside.setTranslateY(playerside.getUpperY());
-//		oppside.setTranslateX(oppside.getUpperX());
-//		oppside.setTranslateY(0);
+		basePane.getChildren().addAll(cardGroup);
+		//
+		deck1 = new DeckBuilder(playerside, "s", popup, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/yugi"));
+		//deck1 = new DeckBuilder(playerside, "s", popup, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/yugi"));
+		deck2 = new DeckBuilder(oppside, "s", popup, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/kaiba"));
+		//deck2 = new DeckBuilder(oppside, "s", popup, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/kaiba"));
 		
 //		bt = new Button("here");
 //		root.getChildren().add(bt);
@@ -99,17 +93,15 @@ public class GameDriver extends Application {
 //		String url = this.getClass().getResource("/assets/sky.jpg").toString();
 //		ImageView imageview = new ImageView(new Image(url));
 		ImageView imageview = new ImageView(new Image("/assets/miku.jpg"));
-		imageview.setFitWidth(boardwidth);
-		imageview.setFitHeight(boardheight);
+		imageview.fitWidthProperty().bind(root.widthProperty());
+		imageview.fitHeightProperty().bind(root.heightProperty());
 		root.getChildren().add(imageview);
 	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		//Scene scene = new Scene(createContent(primaryStage));
 		Scene scene = new Scene(createRoot());
-		//primaryStage.setTitle("GameBoard");
-		//primaryStage.setScene(scene);
 		createContent(primaryStage, scene);
 		primaryStage.setTitle("GameBoard");
 		primaryStage.setScene(scene);
