@@ -1,9 +1,10 @@
 import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 
 public class Monster extends Card{
 
-	public Monster(board gameboard, String url, OptionWindow options) {
-		super(gameboard, url, options);
+	public Monster(Pane parentPane, board gameboard, String url, OptionWindow options) {
+		super(parentPane, gameboard, url, options);
 	}
 	
 	public void setCard(){

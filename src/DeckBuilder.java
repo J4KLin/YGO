@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public class DeckBuilder extends StackPane{
@@ -12,8 +13,10 @@ public class DeckBuilder extends StackPane{
 	 board gameboard;
 	 OptionWindow options;
 	 Group group;
+	 Pane parentPane;
 	 
-	public DeckBuilder(board gameboard, String side, OptionWindow options, Group group, File folder) {
+	public DeckBuilder(Pane parentPane, board gameboard, String side, OptionWindow options, Group group, File folder) {
+		this.parentPane = parentPane;
 		this.group = group;
 		this.gameboard = gameboard;
 		this.options = options;
@@ -37,10 +40,10 @@ public class DeckBuilder extends StackPane{
 		char cardtype = filename.charAt(filename.length()-5);
 		Card newcard;
 		if (cardtype == 'T' || cardtype == 'S'){
-			newcard = new SpellTrap(gameboard, file.toURI().toString(), options);
+			newcard = new SpellTrap(parentPane, gameboard, file.toURI().toString(), options);
 		}
 		else{
-			newcard = new Monster(gameboard, file.toURI().toString(), options);
+			newcard = new Monster(parentPane, gameboard, file.toURI().toString(), options);
 		}
 		deck[index] = newcard;
 		newcard.cardMovement(CardTile.tileType.DECK, true);

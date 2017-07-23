@@ -1,11 +1,12 @@
 import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 
 public class SpellTrap extends Card{
 	
 	Thread waiter;
 	
-	public SpellTrap(board gameboard, String url, OptionWindow options) {
-		super(gameboard, url, options);
+	public SpellTrap(Pane parentPane, board gameboard, String url, OptionWindow options) {
+		super(parentPane, gameboard, url, options);
 		waiter = new Thread();
 	}
 	
