@@ -68,10 +68,14 @@ public class GameDriver extends Application {
 		oppside = new board(1, popup_menu, boardGroup, boardPane);
 		
 		boardPane.getChildren().addAll(cardGroup);
-		deck1 = new DeckBuilder(boardPane, playerside, "s", popup_menu, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/yugi"));
-		//deck1 = new DeckBuilder(playerside, "s", popup_menu, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/yugi"));
-		deck2 = new DeckBuilder(boardPane, oppside, "s", popup_menu, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/kaiba"));
-		//deck2 = new DeckBuilder(oppside, "s", popup_menu, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/kaiba"));
+		//deck1 = new DeckBuilder(boardPane, playerside, "s", popup_menu, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/yugi"));
+		//deck1 = new DeckBuilder(boardPane, playerside, "s", popup_menu, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/yugi"));
+		String yugi = System.getProperty("user.dir") + "\\src\\assets\\yugi";
+		deck1 = new DeckBuilder(boardPane, playerside, "s", popup_menu, cardGroup, new File(yugi));
+		//deck2 = new DeckBuilder(boardPane, oppside, "s", popup_menu, cardGroup, new File("C:/Users/jack/eclipse-workspace/2DRPG/src/assets/kaiba"));
+		//deck2 = new DeckBuilder(boardPane, oppside, "s", popup_menu, cardGroup, new File("D:/javaworkspace/YGOT/YGO/src/assets/kaiba"));
+		String kaiba = System.getProperty("user.dir") + "\\src\\assets\\kaiba";
+		deck2 = new DeckBuilder(boardPane,oppside, "s", popup_menu, cardGroup, new File(kaiba));
 		
 		return root;
 	}
