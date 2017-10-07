@@ -1,106 +1,99 @@
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
+/*
+ *Card class used to build singular game objects displayed on the pane
+ *Players do not directly interact with card Objects but the underlying tiles on which cards are placed
+ */
 public class Card extends ImageView{
 	enum Position {SET, ATK, DEF, NONE};
+	Pane parentPane;
 	
 	String name;
 	Image cardface;
 	Image cardback;
-	board gameboard;
-	OptionWindow options;
-	double xpos;
-	double ypos;
-	Position position;
-	CardTile.tileType placement;
-	CardTile tile;
-	Pane parentPane;
+	Image cardDisplay;
 	
-	public Card(Pane parentPane, board gameboard, String url, OptionWindow options) {
+	Position position;
+	CardTile.tileType fieldPlacement;
+	CardTile tile;
+	
+	/*
+	 * Create a Card object that will be displayed on the parentPane;
+	 * a newly create Card will have a default of displaying the cardface
+	 * 	@param	parentPane
+	 * 		The primary pane on which everything is built upon
+	 * 	@param	url
+	 * 		Local card image location
+	 */
+	public Card(Pane parentPane, String url) {
 		this.parentPane = parentPane;
-		this.gameboard = gameboard;
-		this.options = options;
 		cardface = new Image(url);
 		cardback = new Image("/assets/back.png");
-		setImage(cardface);
-//		setFitWidth(GameDriver.CARDWIDTH);
-//		setFitHeight(GameDriver.CARDHEIGHT);
+		cardDisplay = cardface;
+		
+		//Bind card object to parentPane for displaying and scaling
 		this.fitWidthProperty().bind(parentPane.widthProperty().multiply(GameDriver.CARDWIDTH/GameDriver.INITWIDTH));
 		this.fitHeightProperty().bind(parentPane.heightProperty().multiply(GameDriver.CARDHEIGHT/GameDriver.INITHEIGHT));
-		//setCache(true);
-		
-		setMouseTransparent(true);
-//		setOnMouseClicked(e -> {
-//			System.out.println("this card is in: " + placement.name());
-//			options.onEvent(this, e.getScreenX(), e.getScreenY());
-//		});
+		this.setMouseTransparent(true);
+		setCache(true);
 	}
 	
-	public void setCard(){
-		this.setImage(cardback);
-		System.out.println("setting");
+	/*
+	 * Update the new tile location on which the card will be placed
+	 * 	@param tile
+	 * 		The CardTile object on which the card will be placed
+	 */
+	public void updateTile(CardTile tile) {
+		this.tile = tile;
+		fieldPlacement = tile.tile;
+		updateLocation(tile);
 	}
 	
-	public void activate(){
-		this.setImage(cardface);
+	/*
+	 * Update the pane to display the card on the new tile location
+	 * 	@param tile
+	 * 		The CardTile object on which the card will be displayed
+	 */
+	public void updateLocation(CardTile t){
+		double adjustFactor = 0;
+		if(t.tile == CardTile.tileType.MONSTER || t.tile == CardTile.tileType.SP_TR) {
+			adjustFactor += ((GameDriver.CARDHEIGHT-GameDriver.CARDWIDTH)/2);
+		}
+		this.xProperty().bind(parentPane.widthProperty().multiply((t.xpos+adjustFactor)/GameDriver.INITWIDTH));
+		this.yProperty().bind(parentPane.heightProperty().multiply(t.ypos/GameDriver.INITHEIGHT));
 	}
 	
+	/*
+	 * Manually set where the card is being displayed on the pane (USE WITH CAUTION)
+	 * 	@param x
+	 * 		x coordinate on the pane
+	 * 	@param y 
+	 * 		y coordinate on the pane
+	 */
 	public void deprecated_placement(double x, double y) {
-//		setTranslateX(x);
-//		setTranslateY(y);
 		this.xProperty().bind(parentPane.widthProperty().multiply(x/GameDriver.INITWIDTH));
 		this.yProperty().bind(parentPane.heightProperty().multiply(y/GameDriver.INITHEIGHT));
 	}
 	
-	public void toDeck(boolean init) {
-		cardMovement(CardTile.tileType.DECK, init);
+	//Generic Method that will be Overridden by Children Classes
+	public void setCard(board curBoard){
+		cardDisplay = cardback;
 	}
 	
-	public void toExtra(boolean init) {
-		cardMovement(CardTile.tileType.EXTRA, init);
+	//Generic Method that will be Overridden by Children Classes
+	public void activate(){
+		cardDisplay = cardface;
 	}
 	
-	public void toGrave(boolean init) {
-		cardMovement(CardTile.tileType.GRAVE, init);
-		this.toFront();
+	public void draw(board curBoard) {
+		cardDisplay = cardface;
+		curBoard.cardMovement(this, CardTile.tileType.HAND, false);
 	}
 	
-	public void toMonsterZone(boolean init){
-		cardMovement(CardTile.tileType.MONSTER, init);
-	}
-	
-	public void toSTZone(boolean init){
-		cardMovement(CardTile.tileType.SP_TR, init);
-	}
-	
-	public void toHand(boolean init){
-		cardMovement(CardTile.tileType.HAND, init);
-	}
-	
-	public void updateLocation(CardTile t){
-//		setTranslateX(t.xpos);
-//		setTranslateY(t.ypos);
-		this.xProperty().bind(parentPane.widthProperty().multiply(t.xpos/GameDriver.INITWIDTH));
-		this.yProperty().bind(parentPane.heightProperty().multiply(t.ypos/GameDriver.INITHEIGHT));
-	}
-	
-	public void cardMovement(CardTile.tileType to, boolean init){
-		if(gameboard.isFull(to)){
-			return;
-		}
-		tile = gameboard.cardMovement(this, to, init);
-		placement = to;
-		xpos = tile.xpos;
-		ypos = tile.ypos;
-		if(to == CardTile.tileType.MONSTER || to == CardTile.tileType.SP_TR){
-			xpos += ((GameDriver.CARDHEIGHT-GameDriver.CARDWIDTH)/2);
-		}
-		//setTranslateX(xpos);
-		//setTranslateY(ypos);
-		this.xProperty().bind(parentPane.widthProperty().multiply(xpos/GameDriver.INITWIDTH));
-		this.yProperty().bind(parentPane.heightProperty().multiply(ypos/GameDriver.INITHEIGHT));
+	public void toDeck(board curBoard, boolean init) {
+		cardDisplay = cardback;
+		curBoard.cardMovement(this, CardTile.tileType.DECK, init);
 	}
 }

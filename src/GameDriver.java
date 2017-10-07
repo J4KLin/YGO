@@ -1,20 +1,12 @@
 import java.io.File;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 
 public class GameDriver extends Application {
@@ -33,13 +25,9 @@ public class GameDriver extends Application {
 	private Pane root;
 	private Pane boardPane;
 	private CardWindow windowPane;
-	private DeckBuilder deck1;
-	private DeckBuilder deck2;
 	private board playerside;
 	private board oppside;
 	private Group boardGroup = new Group();
-	private Group cardGroup = new Group();
-	
 	private Stage primaryStage;
 	
 	OptionWindow popup_menu;
@@ -56,7 +44,8 @@ public class GameDriver extends Application {
 		root.getChildren().add(boardPane);
 		
 		windowPane = new CardWindow(root);
-		//root.getChildren().add(windowPane);
+		windowPane.openWindow();
+		
 		return root;
 	}
 	
@@ -67,12 +56,10 @@ public class GameDriver extends Application {
 		playerside = new board(0, popup_menu,boardGroup, boardPane);
 		oppside = new board(1, popup_menu, boardGroup, boardPane);
 		
-		boardPane.getChildren().addAll(cardGroup);
 		String yugi = System.getProperty("user.dir") + "\\src\\assets\\yugi";
-		deck1 = new DeckBuilder(boardPane, playerside, "s", popup_menu, cardGroup, new File(yugi));
 		String kaiba = System.getProperty("user.dir") + "\\src\\assets\\kaiba";
-		deck2 = new DeckBuilder(boardPane,oppside, "s", popup_menu, cardGroup, new File(kaiba));
-		
+		playerside.loadDeck(DeckBuilder.buildDeck(boardPane, new File(yugi)));
+		oppside.loadDeck(DeckBuilder.buildDeck(boardPane, new File(kaiba)));
 		return root;
 	}
 	

@@ -25,8 +25,9 @@ public class board extends StackPane {
 	public OptionWindow option;
 	private Pane parentPane;
 	
-	public Rectangle cvBorder;
-	public ImageView cardView;
+	public ImageView cardView;	//Magnified Card Displayer on the Upper Left Corner of the Board
+	public Rectangle cvBorder;	//Lower layer on which cardView sits upon
+	
 	
 	public board(int player , OptionWindow option, Group group, Pane parentPane){
 		this.option = option;
@@ -46,6 +47,31 @@ public class board extends StackPane {
 		genExtra();
 		genDeck();
 		genHand();
+	}
+	
+	//One time generation of cardView
+	private void genCardViewer(){
+		cvBorder = new Rectangle(GameDriver.DESWIDTH, GameDriver.DESHEIGHT, Color.TRANSPARENT);
+		cvBorder.setStroke(Color.valueOf("#2297DC"));
+		//cvBorder.setStrokeWidth(5);
+		cvBorder.strokeWidthProperty().bind(parentPane.widthProperty().multiply(5/GameDriver.INITWIDTH));
+		cvBorder.heightProperty().bind(parentPane.heightProperty().multiply(GameDriver.DESHEIGHT/GameDriver.INITHEIGHT));
+		cvBorder.widthProperty().bind(parentPane.widthProperty().multiply(GameDriver.DESWIDTH/GameDriver.INITWIDTH));
+		cvBorder.xProperty().bind(parentPane.widthProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITWIDTH));
+		cvBorder.yProperty().bind(parentPane.heightProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITHEIGHT));
+		group.getChildren().add(cvBorder);
+		cardView = new ImageView();
+		cardView.fitHeightProperty().bind(parentPane.heightProperty().multiply(GameDriver.DESHEIGHT/GameDriver.INITHEIGHT));
+		cardView.fitWidthProperty().bind(parentPane.widthProperty().multiply(GameDriver.DESWIDTH/GameDriver.INITWIDTH));
+		cardView.xProperty().bind(parentPane.widthProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITWIDTH));
+		cardView.yProperty().bind(parentPane.heightProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITHEIGHT));
+		group.getChildren().add(cardView);
+	}
+	
+	
+	public void viewCard(Card card){
+		cardView.toFront();
+		cardView.setImage(card.cardface);
 	}
 	
 	public boolean isFull(CardTile.tileType ttype){
@@ -77,28 +103,6 @@ public class board extends StackPane {
 		}
 	}
 	
-	private void genCardViewer(){
-		cvBorder = new Rectangle(GameDriver.DESWIDTH, GameDriver.DESHEIGHT, Color.TRANSPARENT);
-		cvBorder.setStroke(Color.valueOf("#2297DC"));
-		//cvBorder.setStrokeWidth(5);
-		cvBorder.strokeWidthProperty().bind(parentPane.widthProperty().multiply(5/GameDriver.INITWIDTH));
-		cvBorder.heightProperty().bind(parentPane.heightProperty().multiply(GameDriver.DESHEIGHT/GameDriver.INITHEIGHT));
-		cvBorder.widthProperty().bind(parentPane.widthProperty().multiply(GameDriver.DESWIDTH/GameDriver.INITWIDTH));
-		cvBorder.xProperty().bind(parentPane.widthProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITWIDTH));
-		cvBorder.yProperty().bind(parentPane.heightProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITHEIGHT));
-		group.getChildren().add(cvBorder);
-		cardView = new ImageView();
-		cardView.fitHeightProperty().bind(parentPane.heightProperty().multiply(GameDriver.DESHEIGHT/GameDriver.INITHEIGHT));
-		cardView.fitWidthProperty().bind(parentPane.widthProperty().multiply(GameDriver.DESWIDTH/GameDriver.INITWIDTH));
-		cardView.xProperty().bind(parentPane.widthProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITWIDTH));
-		cardView.yProperty().bind(parentPane.heightProperty().multiply(GameDriver.CARDSPACE/GameDriver.INITHEIGHT));
-		group.getChildren().add(cardView);
-	}
-	
-	public void viewCard(Card card){
-		cardView.toFront();
-		cardView.setImage(card.cardface);
-	}
 	private void genGrave(){
 		if(player == 0){
 			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
@@ -108,7 +112,7 @@ public class board extends StackPane {
 			x = (GameDriver.CARDSPACE*2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDHEIGHT * 2) + (GameDriver.CARDSPACE * 3);
 		}
-		grave = new CardTile(parentPane, CardTile.tileType.GRAVE, option, x, y);
+		grave = new CardTile(parentPane, this, group, CardTile.tileType.GRAVE, option, x, y);
 		group.getChildren().add(grave);
 	}
 	
@@ -121,7 +125,7 @@ public class board extends StackPane {
 			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 2) + (GameDriver.CARDHEIGHT);
 		}
-		extra = new CardTile(parentPane, CardTile.tileType.EXTRA, option, x, y);
+		extra = new CardTile(parentPane, this, group, CardTile.tileType.EXTRA, option, x, y);
 		group.getChildren().add(extra);
 	}
 	
@@ -134,7 +138,7 @@ public class board extends StackPane {
 			x = (GameDriver.CARDSPACE*2) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 2) + GameDriver.CARDHEIGHT;
 		}
-		deck = new CardTile(parentPane, CardTile.tileType.DECK, option, x, y);
+		deck = new CardTile(parentPane, this, group, CardTile.tileType.DECK, option, x, y);
 		getChildren().add(deck);
 		group.getChildren().add(deck);
 	}
@@ -148,7 +152,7 @@ public class board extends StackPane {
 			x = (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT *5)+ (GameDriver.CARDSPACE * 8) + GameDriver.DESWIDTH;
 			y = (GameDriver.CARDSPACE * 3) + (GameDriver.CARDHEIGHT * 2);
 		}
-		fieldsp = new CardTile(parentPane, CardTile.tileType.FIELDSP, option, x, y);
+		fieldsp = new CardTile(parentPane, this, group, CardTile.tileType.FIELDSP, option, x, y);
 		getChildren().add(fieldsp);
 		group.getChildren().add(fieldsp);
 	}
@@ -159,7 +163,7 @@ public class board extends StackPane {
 			for(int col=0; col < 5; col ++){
 				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDHEIGHT * 3) + (GameDriver.CARDSPACE * 3) + GameDriver.SIDESPACE;
-				monsterField[col] = new CardTile(parentPane, CardTile.tileType.MONSTER, option, x, y);
+				monsterField[col] = new CardTile(parentPane, this, group, CardTile.tileType.MONSTER, option, x, y);
 				group.getChildren().add(monsterField[col]);
 			}
 		}
@@ -167,7 +171,7 @@ public class board extends StackPane {
 			for(int col=0; col <5; col ++){
 				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDSPACE * 3) + (GameDriver.CARDHEIGHT * 2);
-				monsterField[col] = new CardTile(parentPane, CardTile.tileType.MONSTER, option, x, y);
+				monsterField[col] = new CardTile(parentPane, this, group, CardTile.tileType.MONSTER, option, x, y);
 				group.getChildren().add(monsterField[col]);
 			}
 		}
@@ -179,7 +183,7 @@ public class board extends StackPane {
 			for(int col=0; col < 5; col ++){
 				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDHEIGHT * 4) + (GameDriver.CARDSPACE * 4) + GameDriver.SIDESPACE;
-				stField[col] = new CardTile(parentPane,CardTile.tileType.SP_TR, option, x, y);
+				stField[col] = new CardTile(parentPane, this, group, CardTile.tileType.SP_TR, option, x, y);
 				group.getChildren().add(stField[col]);
 			}
 		}
@@ -187,7 +191,7 @@ public class board extends StackPane {
 			for(int col=0; col <5; col ++){
 				x = (GameDriver.CARDSPACE * (col+3)) + (GameDriver.CARDWIDTH) + (GameDriver.CARDHEIGHT * col) + GameDriver.DESWIDTH;
 				y = (GameDriver.CARDSPACE * 2) + (GameDriver.CARDHEIGHT * 1);
-				stField[col] = new CardTile(parentPane, CardTile.tileType.SP_TR, option, x, y);
+				stField[col] = new CardTile(parentPane, this, group, CardTile.tileType.SP_TR, option, x, y);
 				group.getChildren().add(stField[col]);
 			}
 		}
@@ -195,7 +199,7 @@ public class board extends StackPane {
 	
 	public CardTile cardMovement(Card card, CardTile.tileType to, boolean init){
 		if(!init){
-			if(card.placement == CardTile.tileType.HAND){
+			if(card.fieldPlacement == CardTile.tileType.HAND){
 				removeCardfromHand(card);
 			}
 			else{
@@ -252,7 +256,7 @@ public class board extends StackPane {
 	}
 	
 	public CardTile addCardtoHand(Card card){
-		CardTile newtile = new CardTile(parentPane, CardTile.tileType.HAND, option, 0,0);
+		CardTile newtile = new CardTile(parentPane, this, group, CardTile.tileType.HAND, option, 0,0);
 		hand.add(newtile);
 		group.getChildren().add(newtile);
 		newtile.placeCard(card);
@@ -299,6 +303,12 @@ public class board extends StackPane {
 				relativepos += adjustfactor;
 				curtile.getTopCard().updateLocation(curtile);
 			}	
+		}
+	}
+	
+	public void loadDeck(Card[] cards) {
+		for(Card card: cards) {
+			card.toDeck(this, true);
 		}
 	}
 }

@@ -1,16 +1,9 @@
 import java.util.HashMap;
-
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 public class OptionWindow extends Popup{
 	private static final String[] labels = {"Summon", "Set", "Tribute Summon", "Special Summon", "Activate",
@@ -19,10 +12,9 @@ public class OptionWindow extends Popup{
 	Scene scene;
 	Stage stage;
 	Pane window;
-	VBox box;
 	double windowheight;
 	Card curCard;
-	//Button[] commands;
+	board curBoard;
 	HashMap<String, Button> commands = new HashMap();
 	
 	OptionWindow(Stage stage, Scene scene, double x, double y){
@@ -30,21 +22,24 @@ public class OptionWindow extends Popup{
 		this.stage = stage;
 		windowheight = 0;
 		initAllButton();
-		genScene();
-		//show(stage, x, y);
-		//show(stage, (x-scene.getWindow().getX()) + scene.getWindow().getX(), (y-scene.getWindow().getY()) + scene.getWindow().getY());
+		window = new Pane();
+		window.setPrefSize(100, 200);
+		this.getContent().addAll(window);
 	}
 	
 	private void initAllButton(){
 		initButton("Exit").setOnAction(e-> {this.hide();});
-		//this.getContent().add(commands.get("Exit"));
 		initButton("Attack");
+		initButton("Draw").setOnAction(e-> {
+			curCard.draw(curBoard);
+			this.hide();
+		});;
 		initButton("Summon").setOnAction(e-> {
-			curCard.cardMovement(CardTile.tileType.MONSTER, false);
+			((Monster)curCard).summon(curBoard);
 			this.hide();
 		});
 		initButton("Set").setOnAction(e-> {
-			curCard.setCard();
+			curCard.setCard(curBoard);
 			this.hide();
 		});;
 		initButton("Tribute Summon");
@@ -54,10 +49,6 @@ public class OptionWindow extends Popup{
 		});;
 		initButton("Change to Attack").setOnAction(e-> {
 			((Monster) curCard).changetoattack();
-			this.hide();
-		});;
-		initButton("Draw").setOnAction(e-> {
-			curCard.cardMovement(CardTile.tileType.HAND, false);
 			this.hide();
 		});;
 		initButton("Activate").setOnAction(e-> {
@@ -70,8 +61,6 @@ public class OptionWindow extends Popup{
 			this.hide();
 		});;
 		initButton("View Card").setOnAction(e-> {
-			System.out.println("Viewing");
-			curCard.gameboard.viewCard(curCard);
 			this.hide();
 		});
 		initButton("View Grave");
@@ -90,7 +79,6 @@ public class OptionWindow extends Popup{
 	
 	private void addButton(Button button){
 		button.setTranslateY(windowheight);
-		//button.setBackground(null);
 		window.getChildren().add(button);
 		windowheight = windowheight + button.getPrefHeight();
 	}
@@ -100,21 +88,10 @@ public class OptionWindow extends Popup{
 		windowheight = 0;
 	}
 	
-	private void genScene(){
-		window = new Pane();
-		window.setPrefSize(100, 200);
-//		addButton(commands.get("Exit"));
-//		addButton(commands.get("Attack"));
-//		addButton(commands.get("Summon"));
-		//window.getChildren().add(commands.get("Exit"));
-		//commands.get("Attack").setTranslateY(100);
-		//window.getChildren().add(commands.get("Attack"));
-		this.getContent().addAll(window);
-	}
-	
-	public void onEvent(Card card, double x, double y) {
+	public void onEvent(board board, Card card, double x, double y) {
+		curBoard = board;
 		curCard = card;
-		updateOptions(card, card.placement);
+		updateOptions(card, card.fieldPlacement);
 		if(this.isShowing()) {
 			this.hide();
 		}

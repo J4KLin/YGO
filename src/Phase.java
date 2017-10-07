@@ -1,4 +1,3 @@
-
 public class Phase {
 	public enum phasetype {STANDBY, DRAWPHASE, MAINPHASE1, BATTLE, MAINPHASE2, ENDPHASE, OPPONENT};
 	

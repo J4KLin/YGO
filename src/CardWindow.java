@@ -1,8 +1,6 @@
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -23,9 +21,21 @@ public class CardWindow extends ScrollPane{
 	public Card[] cardStack;
 	public Rectangle[] tester;
 	
+	private Pane parentPane;
+	
 	public CardWindow(Pane parent) {
+		this.parentPane = parent;
+		
 		initScrollPane(parent);
 		initDisplayPane();
+		
+		//
+		Button f = new Button("close");
+		display.getChildren().add(f);
+		f.setOnAction(e-> {
+			closeWindow();
+		});
+		//
 		
 		rectangleCreator(23);
 		refreshDisplay();
@@ -81,6 +91,14 @@ public class CardWindow extends ScrollPane{
 			addCard(tester[idx], curx, cury);
 			curx += (GameDriver.CARDWIDTH + GameDriver.CARDSPACE);
 		}
+	}
+	
+	public void closeWindow() {
+		parentPane.getChildren().remove(this);
+	}
+	
+	public void openWindow() {
+		parentPane.getChildren().add(this);
 	}
 	
 	private void addCard(Rectangle r, double x, double y) {

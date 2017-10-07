@@ -1,53 +1,50 @@
 import java.io.File;
-
-import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
-public class DeckBuilder extends StackPane{
-
-	 Card[] deck;
-	 board gameboard;
-	 OptionWindow options;
-	 Group group;
-	 Pane parentPane;
-	 
-	public DeckBuilder(Pane parentPane, board gameboard, String side, OptionWindow options, Group group, File folder) {
-		this.parentPane = parentPane;
-		this.group = group;
-		this.gameboard = gameboard;
-		this.options = options;
-		setPickOnBounds(false);
-		createDeck(folder);
-		gameboard.deck.toFront();
-	}
-	
-	private void createDeck(File folder){
+/*
+ * A static class for building a deck of cards (an array of Card objects)
+ */
+public class DeckBuilder{
+	/*
+	 * Iterate through all the images from a given folder and generate card objects for each image
+	 * and return an array of those card objects
+	 * 	@param parentPane
+	 * 			The primary pane on which everything is built upon
+	 * 	@param folder
+	 * 			The file containing all the card images
+	 * 	@return A array of Card objects
+	 */
+	public static Card[] buildDeck(Pane parentPane, File folder){
 		File[] files = folder.listFiles();
+		Card[] deck = new Card[files.length];
 		int cardcount = 0;
-		deck = new Card[files.length];
 		for (File file : files){
-			createCard(file, cardcount);
+			deck[cardcount] = createCard(parentPane, file);
 			cardcount ++;
 		}
+		return deck;
 	}
 	
-	private void createCard(File file, int index){
-		String filename = file.getName();
+	
+	/*
+	 * Generate a card object from an image file. The format of the image name must be
+	 * in the format of /^.*[MST]\.(jpg|png)$/
+	 * 	@param parentPane
+	 * 			The primary pane on which everything is built upon
+	 * 	@param imgFile
+	 * 			The File object of a card image
+	 * 	@return A card object built from the imgFile
+	 */
+	private static Card createCard(Pane parentPane, File imgFile){
+		String filename = imgFile.getName();
 		char cardtype = filename.charAt(filename.length()-5);
 		Card newcard;
 		if (cardtype == 'T' || cardtype == 'S'){
-			newcard = new SpellTrap(parentPane, gameboard, file.toURI().toString(), options);
+			newcard = new SpellTrap(parentPane, imgFile.toURI().toString());
 		}
 		else{
-			newcard = new Monster(parentPane, gameboard, file.toURI().toString(), options);
+			newcard = new Monster(parentPane, imgFile.toURI().toString());
 		}
-		deck[index] = newcard;
-		newcard.cardMovement(CardTile.tileType.DECK, true);
-		newcard.toBack();
-		group.getChildren().add(newcard);
+		return newcard;
 	}
 }
